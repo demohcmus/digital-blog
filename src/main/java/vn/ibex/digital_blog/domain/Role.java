@@ -38,7 +38,7 @@ public class Role {
 
     @NotNull(message = "Role name is required")
     @Enumerated(EnumType.STRING) // Lưu Enum dưới dạng chuỗi trong database
-    private RoleEnum name;
+    private String name;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value="roles")
@@ -48,7 +48,7 @@ public class Role {
         inverseJoinColumns = @JoinColumn(name = "permission_id"))
     private List<Permission> permissions;
     
-    // @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
-    // @JsonIgnore
-    // List<User> users;
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
+    @JsonIgnore
+    List<User> users;
 }

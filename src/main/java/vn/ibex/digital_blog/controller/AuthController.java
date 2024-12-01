@@ -39,6 +39,7 @@ public class AuthController {
             userLogin.setId(currUser.getId());
             userLogin.setEmail(currUser.getEmail());
             userLogin.setName(currUser.getFirstName() + " " + currUser.getLastName());
+            userLogin.setRole(currUser.getRole());
         }
         return  ResponseEntity.ok(userLogin);
     }

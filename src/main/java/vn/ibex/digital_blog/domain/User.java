@@ -61,7 +61,7 @@ public class User {
     private String refreshToken;
     
     @ManyToOne
-    @JoinColumn(name= "role_id")
+    @JoinColumn(name = "role_id")
     private Role role;
     
     

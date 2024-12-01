@@ -29,7 +29,7 @@ public class ResUserDTO {
     @NoArgsConstructor
     public static class RoleUser {
         private long id;
-        private RoleEnum name;
+        private String name;
     }
     
 }

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import vn.ibex.digital_blog.domain.Role;
 import vn.ibex.digital_blog.domain.User;
 import vn.ibex.digital_blog.domain.response.ResCreateUserDTO;
 import vn.ibex.digital_blog.domain.response.ResUserDTO;
@@ -18,12 +19,20 @@ import vn.ibex.digital_blog.repository.UserRepository;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final RoleService roleService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository,
+            RoleService roleService) {
         this.userRepository = userRepository;
+        this.roleService = roleService;
     }
 
     public User handleSaveUser(User user) {
+        // check role
+        if (user.getRole() != null) {
+            Role r = this.roleService.fetchById(user.getRole().getId());
+            user.setRole(r != null ? r : null);
+        }
         return this.userRepository.save(user);
     }
 
@@ -41,11 +50,12 @@ public class UserService {
 
     public ResCreateUserDTO convertToResUserDTO(User user) {
         ResCreateUserDTO resCreateUserDTO = new ResCreateUserDTO();
-        ResUserDTO.RoleUser roleUser = new ResUserDTO.RoleUser();
+        ResCreateUserDTO.RoleUser roleUser = new ResCreateUserDTO.RoleUser();
 
         if (user.getRole() != null) {
             roleUser.setId(user.getRole().getId());
             roleUser.setName(user.getRole().getName());
+            resCreateUserDTO.setRole(roleUser);
         }
         resCreateUserDTO.setId(user.getId());
         resCreateUserDTO.setEmail(user.getEmail());
@@ -93,7 +103,10 @@ public class UserService {
             currentUser.setLastName(reqUser.getLastName());
             if(reqUser.getDob()!=null)
             currentUser.setDob(reqUser.getDob());
-
+            if (reqUser.getRole() != null) {
+                Role r = this.roleService.fetchById(reqUser.getRole().getId());
+                currentUser.setRole(r != null ? r : null);
+            }
             return this.userRepository.save(currentUser);
         }
 
