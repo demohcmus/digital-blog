@@ -1,4 +1,4 @@
-package vn.ibex.constant;
+package vn.ibex.digital_blog.constant;
 
 public enum RoleEnum {
     USER,

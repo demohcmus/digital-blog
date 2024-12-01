@@ -14,4 +14,6 @@ List<User> findAll();
     boolean existsByEmail(String email);
     User findByEmail(String email);
 
+    User findByRefreshTokenAndEmail(String token, String email);
+
 }

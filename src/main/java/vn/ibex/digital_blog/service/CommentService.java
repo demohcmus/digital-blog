@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import vn.ibex.digital_blog.domain.Article;
 import vn.ibex.digital_blog.domain.Comment;
 import vn.ibex.digital_blog.domain.User;
+import vn.ibex.digital_blog.domain.response.ResCreateArticleDTO;
 import vn.ibex.digital_blog.domain.response.ResCreateCommentDTO;
 import vn.ibex.digital_blog.domain.response.ResUpdateCommentDTO;
 import vn.ibex.digital_blog.repository.ArticleRepository;
@@ -18,51 +19,48 @@ public class CommentService {
     private final ArticleRepository articleRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
+
     public CommentService(ArticleRepository articleRepository,
-     CommentRepository commentRepository,
-     UserRepository userRepository) {
+            CommentRepository commentRepository,
+            UserRepository userRepository) {
         this.articleRepository = articleRepository;
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
     }
 
     // Save Comment to Article
-    public ResCreateCommentDTO saveComment(long articleId, long userId, String content) {
-        Optional<Article> currentArticle = this.articleRepository.findById(articleId);
-        if (currentArticle.isPresent()) {
-            Comment comment = new Comment();
-            Optional<User> currentUser = this.userRepository.findById(userId);
-            comment.setArticle(currentArticle.get());
-            comment.setContent(content);
-            comment.setUser(currentUser.get());
-            comment = this.commentRepository.save(comment);
+    public ResCreateCommentDTO saveComment(String content, long articleId, String email) {
 
-            ResCreateCommentDTO resCreateCommentDTO = new ResCreateCommentDTO();
-            ResCreateCommentDTO.ArticleCMT articleCMT = new ResCreateCommentDTO.ArticleCMT();
-            ResCreateCommentDTO.UserCMT userCMT = new ResCreateCommentDTO.UserCMT();
-            resCreateCommentDTO.setId(comment.getId());
-            resCreateCommentDTO.setContent(comment.getContent());
-            resCreateCommentDTO.setCreatedAt(comment.getCreatedAt());
-            
-            articleCMT.setId(currentArticle.get().getId());
-            articleCMT.setTitle(currentArticle.get().getTitle());
+        User user = this.userRepository.findByEmail(email);
+        Article article = this.articleRepository.findById(articleId).get();
+        Comment comment = new Comment();
+        comment.setContent(content);
+        comment.setArticle(article);
+        comment.setUser(user);
 
-            userCMT.setId(currentUser.get().getId());
-            userCMT.setUsername(currentUser.get().getEmail());
+        comment = this.commentRepository.save(comment);
 
-            resCreateCommentDTO.setArticle(articleCMT);
-            resCreateCommentDTO.setUser(userCMT);
-            return resCreateCommentDTO;
-        }
-        return null;
+        ResCreateCommentDTO resCreateCommentDTO = new ResCreateCommentDTO();
+        ResCreateCommentDTO.ArticleCMT articleCMT = new ResCreateCommentDTO.ArticleCMT();
+        ResCreateCommentDTO.UserCMT userCMT = new ResCreateCommentDTO.UserCMT();
+        resCreateCommentDTO.setId(comment.getId());
+        resCreateCommentDTO.setContent(comment.getContent());
+        resCreateCommentDTO.setCreatedAt(comment.getCreatedAt());
 
+        articleCMT.setId(article.getId());
+        articleCMT.setTitle(article.getTitle());
 
+        userCMT.setId(user.getId());
+        userCMT.setUsername(user.getEmail());
+
+        resCreateCommentDTO.setArticle(articleCMT);
+        resCreateCommentDTO.setUser(userCMT);
+        return resCreateCommentDTO;
 
     }
 
-
-     // Update Comment to Article
-     public ResUpdateCommentDTO updateComment(long commentId, String content) {
+    // Update Comment to Article
+    public ResUpdateCommentDTO updateComment(long commentId, String content) {
         Optional<Comment> currentComment = this.commentRepository.findById(commentId);
         if (currentComment.isPresent() && content != null) {
             Comment comment = currentComment.get();
@@ -77,7 +75,7 @@ public class CommentService {
             resUpdateCommentDTO.setId(comment.getId());
             resUpdateCommentDTO.setContent(comment.getContent());
             resUpdateCommentDTO.setUpdatedAt(comment.getUpdatedAt());
-            
+
             articleCMT.setId(currentArticle.get().getId());
             articleCMT.setTitle(currentArticle.get().getTitle());
 
@@ -89,8 +87,6 @@ public class CommentService {
             return resUpdateCommentDTO;
         }
         return null;
-        
-
 
     }
 }

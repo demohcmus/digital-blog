@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.Setter;
+import vn.ibex.digital_blog.util.SecurityUtil;
 
 @Table(name = "articles")
 @Entity
@@ -40,7 +41,7 @@ public class Article {
     @Column(columnDefinition = "text")
     private String content;
 
-    private String createdBy;
+    private long createdBy;
     
     private Instant createdAt;
 
@@ -59,7 +60,7 @@ public class Article {
 
     @PrePersist
     public void handleBeforeCreate() {
-        // this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent()
+        this.createdBy = SecurityUtil.getCurrentUserId();
         this.createdAt = Instant.now();
     }
 

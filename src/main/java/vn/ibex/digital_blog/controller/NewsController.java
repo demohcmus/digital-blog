@@ -25,6 +25,7 @@ import vn.ibex.digital_blog.domain.response.ResUpdateCommentDTO;
 import vn.ibex.digital_blog.domain.response.ResultPaginationDTO;
 import vn.ibex.digital_blog.service.ArticleService;
 import vn.ibex.digital_blog.service.CommentService;
+import vn.ibex.digital_blog.util.SecurityUtil;
 import vn.ibex.digital_blog.util.annotation.ApiMessage;
 import vn.ibex.digital_blog.util.error.IdInvalidException;
 
@@ -48,8 +49,12 @@ public class NewsController {
     @PostMapping("/articles")
     @ApiMessage("Create a new article")
     public ResponseEntity<ResCreateArticleDTO> create(@Valid @RequestBody Article article){
+         String email = SecurityUtil.getCurrentUserLogin().isPresent()
+        ? SecurityUtil.getCurrentUserLogin().get()
+        : "";
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(this.articleService.create(article));
+                .body(this.articleService.create(article, email));
     }
 
     @PutMapping("/articles")
@@ -105,12 +110,16 @@ public class NewsController {
     public ResponseEntity<ResCreateCommentDTO> createComment(@PathVariable("id") long articleId, @Valid @RequestBody String content)
     throws IdInvalidException{
         Optional<Article> article = this.articleService.fetchArticleById(articleId);
-        long userId=0;
         if(!article.isPresent()){
             throw new IdInvalidException("Article with id = "+ articleId+"is not found");
         }
+
+        String email = SecurityUtil.getCurrentUserLogin().isPresent()
+        ? SecurityUtil.getCurrentUserLogin().get()
+        : "";
+        
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(this.commentService.saveComment(articleId, userId, content));
+                .body(this.commentService.saveComment(content, articleId, email));
     }
 
     @PostMapping("/articles/{id}/comments/{commentId}")

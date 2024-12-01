@@ -15,6 +15,5 @@ public class ResUpdateArticleDTO {
     private long id;
     private String title;
     private String content;
-    private String createdBy;
     private Instant updatedAt;
 }

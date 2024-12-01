@@ -31,9 +31,6 @@ public class Permission {
     private long id;
 
     @NotBlank(message = "Permission name is required")
-    private String name;
-
-    @NotBlank(message = "Permission name is required")
     private String apiPath;
 
     @NotBlank(message = "Permission method is required")

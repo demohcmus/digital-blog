@@ -9,21 +9,28 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import vn.ibex.digital_blog.domain.Article;
+import vn.ibex.digital_blog.domain.User;
 import vn.ibex.digital_blog.domain.response.ResCreateArticleDTO;
 import vn.ibex.digital_blog.domain.response.ResUpdateArticleDTO;
 import vn.ibex.digital_blog.domain.response.ResultPaginationDTO;
 import vn.ibex.digital_blog.repository.ArticleRepository;
+import vn.ibex.digital_blog.repository.UserRepository;
 import vn.ibex.digital_blog.util.error.IdInvalidException;
 
 @Service
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final UserRepository userRepository;
 
-    public ArticleService(ArticleRepository articleRepository) {
+    public ArticleService(ArticleRepository articleRepository,
+    UserRepository userRepository){ 
         this.articleRepository = articleRepository;
+        this.userRepository = userRepository;
     }
 
-    public ResCreateArticleDTO create (Article article){
+    public ResCreateArticleDTO create (Article article, String email){
+        User user = this.userRepository.findByEmail(email);
+        article.setUser(user);
         Article currentArticle = this.articleRepository.save(article);
 
         // convert response
@@ -47,9 +54,10 @@ public class ArticleService {
 
     public ResUpdateArticleDTO update(Article article, Article articleInDB){
 
+        if(article.getTitle()!=null)
         articleInDB.setTitle(article.getTitle());
+        if(article.getContent()!=null)
         articleInDB.setContent(article.getContent());
-        articleInDB.setUpdatedAt(article.getUpdatedAt());
         
         Article currentArticle = this.articleRepository.save(articleInDB);
 
@@ -58,7 +66,6 @@ public class ArticleService {
         resUpdateArticleDTO.setId(currentArticle.getId());
         resUpdateArticleDTO.setTitle(currentArticle.getTitle());
         resUpdateArticleDTO.setContent(currentArticle.getContent());
-        resUpdateArticleDTO.setCreatedBy(currentArticle.getCreatedBy());
         resUpdateArticleDTO.setUpdatedAt(currentArticle.getUpdatedAt());
 
         return resUpdateArticleDTO;

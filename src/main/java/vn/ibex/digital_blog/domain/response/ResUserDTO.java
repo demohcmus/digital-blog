@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import vn.ibex.digital_blog.constant.RoleEnum;
 
 @Getter
 @Setter
@@ -28,7 +29,7 @@ public class ResUserDTO {
     @NoArgsConstructor
     public static class RoleUser {
         private long id;
-        private String name;
+        private RoleEnum name;
     }
     
 }

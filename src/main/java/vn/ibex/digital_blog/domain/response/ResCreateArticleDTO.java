@@ -15,7 +15,7 @@ public class ResCreateArticleDTO {
     private long id;
     private String title;
     private String content;
-    private String createdBy;
+    private long createdBy;
     private Instant createdAt;
     
 }

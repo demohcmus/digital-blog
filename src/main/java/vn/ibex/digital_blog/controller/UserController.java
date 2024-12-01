@@ -21,6 +21,7 @@ import vn.ibex.digital_blog.domain.response.ResCreateUserDTO;
 import vn.ibex.digital_blog.domain.response.ResUserDTO;
 import vn.ibex.digital_blog.domain.response.ResultPaginationDTO;
 import vn.ibex.digital_blog.service.UserService;
+import vn.ibex.digital_blog.util.SecurityUtil;
 import vn.ibex.digital_blog.util.annotation.ApiMessage;
 import vn.ibex.digital_blog.util.error.IdInvalidException;
 
@@ -53,6 +54,7 @@ public class UserController {
         }
         String hashPassword = this.passwordEncoder.encode(userPostMan.getPassword());
         userPostMan.setPassword(hashPassword);
+        userPostMan.setActive(true);
         User newUser = userService.handleSaveUser(userPostMan);
         
         return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.convertToResUserDTO(newUser));
@@ -62,7 +64,6 @@ public class UserController {
     @ApiMessage("delete a user")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") long id) {
         User currentUser = this.userService.fetchUserById(id);
-        userService.handleDeleteUser(id);
         if(currentUser == null) {
             return ResponseEntity.notFound().build();
         }
@@ -94,12 +95,6 @@ public class UserController {
     }
 
 
-    @GetMapping("/helo")
-    @ApiMessage("fetch all helo")
-    public String hello( ){
-        return "Hello";
-    }
-
     @PutMapping("/users")
     @ApiMessage("update a user")
     public ResponseEntity<ResCreateUserDTO>  updateUser(@RequestBody User user)
@@ -112,15 +107,34 @@ public class UserController {
     }
 
 
-    @PutMapping("/users/{id}")
-    @ApiMessage("deactive a user")
-    public ResponseEntity<ResCreateUserDTO>  deactivateUser(@RequestBody User user)
+    @PutMapping("/users/deactivate-activate")
+    @ApiMessage("deactive/active a user")
+    public ResponseEntity<ResCreateUserDTO>  deactivateUser(@RequestBody String id)
     throws IdInvalidException{
-        User currUser = this.userService.handleUpdateUser(user);
+        long longId = Long.parseLong(id);
+        User currUser = this.userService.fetchUserById(longId);
         if(currUser == null) {
-            throw new IdInvalidException("User id: " + user.getId() + " is not found");
+            throw new IdInvalidException("User id: " + id + " is not found");
         }
+        this.userService.deactiveOrActiveUser(currUser);
         return ResponseEntity.ok(this.userService.convertToResUserDTO(currUser));
+    }
+
+    @PutMapping("/users/change-password")
+    @ApiMessage("chang password")
+    public ResponseEntity<Void>  changePassword(@RequestBody String newPassword)
+    throws IdInvalidException{
+
+        String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
+        if (email.equals("")) {
+            throw new IdInvalidException("User is not found");
+        }
+        User user = this.userService.handleGetUserByUsername(email);
+        String hashPassword = this.passwordEncoder.encode(newPassword);
+        user.setPassword(hashPassword);
+
+        this.userService.handleSaveUser(user);
+        return ResponseEntity.ok().build();
     }
 
     
