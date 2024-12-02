@@ -37,7 +37,6 @@ public class Role {
     private long id;
 
     @NotNull(message = "Role name is required")
-    @Enumerated(EnumType.STRING) // Lưu Enum dưới dạng chuỗi trong database
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY)
