@@ -11,4 +11,4 @@ COPY build/libs/digital-blog-*.jar app.jar
 EXPOSE 8084
 
 # Lệnh chạy ứng dụng
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Xms256m", "-Xmx512m", "-jar", "app.jar"]

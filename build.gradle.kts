@@ -1,6 +1,6 @@
 plugins {
 	java
-	id("org.springframework.boot") version "2.7.15" // Spring Boot 2.7.15
+	id("org.springframework.boot") version "2.7.18" // Spring Boot 2.7.18
 	id("io.spring.dependency-management") version "1.0.15.RELEASE" // Dependency management
 }
 
@@ -15,6 +15,7 @@ java {
 
 repositories {
 	mavenCentral()
+	maven { url = uri("https://jitpack.io") }
 }
 
 dependencies {

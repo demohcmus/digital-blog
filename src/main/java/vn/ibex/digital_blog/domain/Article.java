@@ -50,9 +50,11 @@ public class Article {
 
     @ManyToOne
     @JoinColumn(name= "user_id")
+    @JsonIgnore
     private User user;
 
     @OneToMany(mappedBy= "article", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Comment> comments;
     
 

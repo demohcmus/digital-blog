@@ -67,8 +67,15 @@ public class UserService {
         return resCreateUserDTO;
     }
 
-    public ResultPaginationDTO fetchAllUser(Pageable pageable) {
-        Page<User> pageUser = this.userRepository.findAll(pageable);
+    public ResultPaginationDTO fetchAllUser(String searchText, Pageable pageable) {
+        Page<User> pageUser ;
+        if (searchText != null && !searchText.trim().isEmpty()) {
+            pageUser = this.userRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrEmailContainingIgnoreCase(
+                    searchText.trim(),searchText.trim(), searchText.trim(), pageable);
+        } else {
+            // if searchText is null or empty
+            pageUser = this.userRepository.findAll(pageable);
+        }
         ResultPaginationDTO resultPaginationDTO = new ResultPaginationDTO();
         ResultPaginationDTO.Meta meta = new ResultPaginationDTO.Meta();
 

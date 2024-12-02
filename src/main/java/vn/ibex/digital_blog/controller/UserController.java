@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import vn.ibex.digital_blog.domain.User;
@@ -89,8 +90,10 @@ public class UserController {
     // thiếu filter
     @GetMapping("/users")
     @ApiMessage("fetch all user")
-    public ResponseEntity<ResultPaginationDTO> getAllUser( Pageable pageable){
-        ResultPaginationDTO resultPaginationDTO = this.userService.fetchAllUser( pageable);
+    public ResponseEntity<ResultPaginationDTO> getAllUser( 
+        @RequestParam(value = "searchText", required = false) String searchText,
+        Pageable pageable){
+        ResultPaginationDTO resultPaginationDTO = this.userService.fetchAllUser( searchText, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(resultPaginationDTO);
     }
 
