@@ -38,6 +38,12 @@ public class PermissionInterceptor implements HandlerInterceptor {
         System.out.println(">>> requestURI= " + requestURI);
 
         // check permission
+        if (path.matches("/api/v1/articles/\\d+/comments")) {
+            return true; // Cho phép truy cập mà không cần kiểm tra
+        }
+
+
+        
         String email = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";

@@ -42,7 +42,7 @@ public class SecurityConfiguration {
     // Cấu hình SecurityFilterChain
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
-    CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
+            CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
 
         // Danh sách các endpoint không cần xác thực
         // String[] whiteList = {
@@ -61,16 +61,19 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authz -> authz
-                        .antMatchers("/api/v1/auth/login", "api/v1/auth/refresh").permitAll() // allow
+                        .antMatchers("/",
+                                "/api/v1/auth/**",
+                                "/api/v1/articles/*/comments",
+                                "/api/v1/articles"
+                                )
+                        .permitAll() // allow
                         .anyRequest().authenticated() // other request have to be authenticated
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())
-                .authenticationEntryPoint(customAuthenticationEntryPoint)
-                )
+                        .authenticationEntryPoint(customAuthenticationEntryPoint))
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
-                        .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
-                )
+                        .accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
                 .formLogin(f -> f.disable())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -103,7 +106,7 @@ public class SecurityConfiguration {
         return new SecretKeySpec(keyBytes, 0, keyBytes.length, SecurityUtil.JWT_ALGORITHM.getName());
     }
 
-     @Bean
+    @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
         grantedAuthoritiesConverter.setAuthorityPrefix("");
@@ -113,6 +116,5 @@ public class SecurityConfiguration {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
         return jwtAuthenticationConverter;
     }
-
 
 }
