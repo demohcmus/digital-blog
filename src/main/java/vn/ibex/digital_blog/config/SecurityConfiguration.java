@@ -45,26 +45,21 @@ public class SecurityConfiguration {
             CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
 
         // Danh sách các endpoint không cần xác thực
-        // String[] whiteList = {
-        // "/",
-        // "/api/auth/login",
-        // "/api/auth/refresh",
-        // "/api/auth/register",
-        // "/storage/**",
-        // "/api/emails/**",
-        // "/v3/api-docs/**",
-        // "/swagger-ui/**",
-        // "/swagger-ui.html"
-        // };
+        String[] whiteList = {
+        "/",
+        "/api/auth/**",
+        "/api/articles/*/comments",
+        "/api/articles",
+        "/v3/api-docs/**",
+        "/swagger-ui/**",
+        "/swagger-ui.html"
+        };
 
         // Cấu hình bảo mật
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authz -> authz
-                        .antMatchers("/",
-                                "/api/auth/**",
-                                "/api/articles/*/comments",
-                                "/api/articles"
+                        .antMatchers( whiteList
                                 )
                         .permitAll() // allow
                         .anyRequest().authenticated() // other request have to be authenticated

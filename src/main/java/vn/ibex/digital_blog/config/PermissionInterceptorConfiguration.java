@@ -17,7 +17,7 @@ public class PermissionInterceptorConfiguration implements WebMvcConfigurer {
         String[] whiteList = {
                 "/",
                 "/api/auth/**",
-                "/api/article/{id}/comments",
+                "/api/articles/{id}/comments",
 
                 "/api/articles",
         };
