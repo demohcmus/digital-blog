@@ -37,7 +37,7 @@ import vn.ibex.digital_blog.util.error.IdInvalidException;
 // Save Comment to Article
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 public class NewsController {
     private final ArticleService articleService;
     private final CommentService commentService;

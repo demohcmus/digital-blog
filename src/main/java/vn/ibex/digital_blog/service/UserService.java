@@ -9,11 +9,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import vn.ibex.digital_blog.dto.model.Role;
-import vn.ibex.digital_blog.dto.model.User;
-import vn.ibex.digital_blog.dto.model.response.ResCreateUserDTO;
-import vn.ibex.digital_blog.dto.model.response.ResUserDTO;
-import vn.ibex.digital_blog.dto.model.response.ResultPaginationDTO;
+import vn.ibex.digital_blog.domain.Role;
+import vn.ibex.digital_blog.domain.User;
+import vn.ibex.digital_blog.domain.response.ResCreateUserDTO;
+import vn.ibex.digital_blog.domain.response.ResultPaginationDTO;
 import vn.ibex.digital_blog.repository.UserRepository;
 
 @Service

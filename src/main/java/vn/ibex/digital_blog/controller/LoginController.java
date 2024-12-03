@@ -31,7 +31,7 @@ import vn.ibex.digital_blog.util.error.IdInvalidException;
 // Logout
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 public class LoginController {
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;

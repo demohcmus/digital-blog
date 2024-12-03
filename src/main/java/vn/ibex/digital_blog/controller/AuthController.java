@@ -8,10 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import vn.ibex.digital_blog.dto.model.User;
-import vn.ibex.digital_blog.dto.model.response.ResCreateUserDTO;
-import vn.ibex.digital_blog.dto.model.response.ResLoginDTO;
-import vn.ibex.digital_blog.dto.model.response.ResUserDTO;
+import vn.ibex.digital_blog.domain.User;
+import vn.ibex.digital_blog.domain.response.ResCreateUserDTO;
+import vn.ibex.digital_blog.domain.response.ResLoginDTO;
 import vn.ibex.digital_blog.service.UserService;
 import vn.ibex.digital_blog.util.SecurityUtil;
 import vn.ibex.digital_blog.util.annotation.ApiMessage;

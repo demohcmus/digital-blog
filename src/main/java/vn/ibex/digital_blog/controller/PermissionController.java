@@ -22,7 +22,7 @@ import vn.ibex.digital_blog.util.annotation.ApiMessage;
 import vn.ibex.digital_blog.util.error.IdInvalidException;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 public class PermissionController {
     private final PermissionService permissionService;
     public PermissionController(PermissionService permissionService) {
