@@ -40,7 +40,7 @@ dependencies {
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 
 	// Swagger / OpenAPI (Optional)
-	implementation("org.springdoc:springdoc-openapi-ui:1.6.14")
+	// implementation("org.springdoc:springdoc-openapi-ui:1.6.14")
 
 	// Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {

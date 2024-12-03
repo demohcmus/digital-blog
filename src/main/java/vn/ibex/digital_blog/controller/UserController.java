@@ -36,7 +36,7 @@ import vn.ibex.digital_blog.util.error.IdInvalidException;
 
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 public class UserController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
@@ -98,16 +98,7 @@ public class UserController {
     }
 
 
-    @PutMapping("/users")
-    @ApiMessage("update a user")
-    public ResponseEntity<ResCreateUserDTO>  updateUser(@RequestBody User user)
-    throws IdInvalidException{
-        User currUser = this.userService.handleUpdateUser(user);
-        if(currUser == null) {
-            throw new IdInvalidException("User id: " + user.getId() + " is not found");
-        }
-        return ResponseEntity.ok(this.userService.convertToResUserDTO(currUser));
-    }
+    
 
 
     @PutMapping("/users/deactivate-activate")
@@ -123,22 +114,7 @@ public class UserController {
         return ResponseEntity.ok(this.userService.convertToResUserDTO(currUser));
     }
 
-    @PutMapping("/users/change-password")
-    @ApiMessage("chang password")
-    public ResponseEntity<Void>  changePassword(@RequestBody String newPassword)
-    throws IdInvalidException{
-
-        String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
-        if (email.equals("")) {
-            throw new IdInvalidException("User is not found");
-        }
-        User user = this.userService.handleGetUserByUsername(email);
-        String hashPassword = this.passwordEncoder.encode(newPassword);
-        user.setPassword(hashPassword);
-
-        this.userService.handleSaveUser(user);
-        return ResponseEntity.ok().build();
-    }
+    
 
     
 

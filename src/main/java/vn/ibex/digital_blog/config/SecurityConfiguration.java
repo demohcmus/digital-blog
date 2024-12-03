@@ -47,11 +47,11 @@ public class SecurityConfiguration {
         // Danh sách các endpoint không cần xác thực
         // String[] whiteList = {
         // "/",
-        // "/api/v1/auth/login",
-        // "/api/v1/auth/refresh",
-        // "/api/v1/auth/register",
+        // "/api/auth/login",
+        // "/api/auth/refresh",
+        // "/api/auth/register",
         // "/storage/**",
-        // "/api/v1/emails/**",
+        // "/api/emails/**",
         // "/v3/api-docs/**",
         // "/swagger-ui/**",
         // "/swagger-ui.html"
@@ -62,9 +62,9 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authz -> authz
                         .antMatchers("/",
-                                "/api/v1/auth/**",
-                                "/api/v1/articles/*/comments",
-                                "/api/v1/articles"
+                                "/api/auth/**",
+                                "/api/articles/*/comments",
+                                "/api/articles"
                                 )
                         .permitAll() // allow
                         .anyRequest().authenticated() // other request have to be authenticated
