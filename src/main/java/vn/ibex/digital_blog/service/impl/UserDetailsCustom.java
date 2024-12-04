@@ -1,4 +1,4 @@
-package vn.ibex.digital_blog.service;
+package vn.ibex.digital_blog.service.impl;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+
+import vn.ibex.digital_blog.service.UserService;
 
 
 @Component("userDetailsService")
