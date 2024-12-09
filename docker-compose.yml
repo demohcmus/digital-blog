@@ -1,50 +1,33 @@
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8084:8084" # Mapping cổng host:container
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/digital-blog
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: 123456
-    depends_on:
-      - postgres
-    networks:
-      - digital-blog-network
-
-  postgres:
-    image: postgres:15
-    container_name: postgres
-    ports:
-      - "5432:5432" # Mapping cổng host:container
+  database:
+    image: postgres:17
+    container_name: postgres_db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
       POSTGRES_DB: digital-blog
-    volumes:
-      - pg_data:/var/lib/postgresql/data # Lưu trữ dữ liệu
-      - ./log:/log # Thư mục log ánh xạ vào máy host
-      - ./postgresql.conf:/etc/postgresql/postgresql.conf # Cấu hình tuỳ chỉnh
-    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"] # Chỉ định tệp cấu hình
-    networks:
-      - digital-blog-network
-
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin
     ports:
-      - "5050:80" # Mapping cổng host:container
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  spring-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring_app
+    ports:
+      - "8084:8084"
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: 123456
-    networks:
-      - digital-blog-network
-
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/digital-blog
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 123456
+    depends_on:
+      - database
 volumes:
-  pg_data: # Volume để lưu trữ dữ liệu PostgreSQL
-
-networks:
-  digital-blog-network: # Mạng chia sẻ giữa các service
-    driver: bridge
+  db_data:
