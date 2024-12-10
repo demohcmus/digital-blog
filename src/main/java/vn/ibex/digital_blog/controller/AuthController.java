@@ -41,13 +41,19 @@ public class AuthController {
         : "";
 
         User  currUser = this.userService.handleGetUserByUsername(email);
-        ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin();
+        ResLoginDTO.UserLogin userLogin;
         if(currUser!=null){
-            userLogin.setId(currUser.getId());
-            userLogin.setEmail(currUser.getEmail());
-            userLogin.setName(currUser.getFirstName() + " " + currUser.getLastName());
-            userLogin.setRole(currUser.getRole());
+            userLogin= new ResLoginDTO.UserLogin(
+                currUser.getId(),
+                currUser.getEmail(),
+                currUser.getFirstName() + " " + currUser.getLastName(),
+                currUser.getRole()
+            );
         }
+        else{
+            userLogin = new ResLoginDTO.UserLogin();
+        }
+        
         return  ResponseEntity.ok(userLogin);
     }
 

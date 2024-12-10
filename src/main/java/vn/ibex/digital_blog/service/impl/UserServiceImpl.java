@@ -50,21 +50,34 @@ public class UserServiceImpl implements UserService {
     }
 
     public ResCreateUserDTO convertToResUserDTO(User user) {
-        ResCreateUserDTO resCreateUserDTO = new ResCreateUserDTO();
-        ResCreateUserDTO.RoleUser roleUser = new ResCreateUserDTO.RoleUser();
+        ResCreateUserDTO resCreateUserDTO = new ResCreateUserDTO(
+                user.getId(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getAddress(),
+                String.format("%s %s",user.getFirstName(), user.getLastName() ),
+                user.getDob(),
+                user.isActive()
+        );
+
+        ResCreateUserDTO.RoleUser roleUser;
 
         if (user.getRole() != null) {
-            roleUser.setId(user.getRole().getId());
-            roleUser.setName(user.getRole().getName());
-            resCreateUserDTO.setRole(roleUser);
+            roleUser= new ResCreateUserDTO.RoleUser(
+                user.getRole().getId(),
+                user.getRole().getName()
+            );
         }
-        resCreateUserDTO.setId(user.getId());
-        resCreateUserDTO.setEmail(user.getEmail());
-        resCreateUserDTO.setPhone(user.getPhone());
-        resCreateUserDTO.setAddress(user.getAddress());
-        resCreateUserDTO.setFullname(String.format("%s %s", user.getFirstName(), user.getLastName()));
-        resCreateUserDTO.setDob(user.getDob());
-        resCreateUserDTO.setActive(user.isActive());
+        else {
+            roleUser = new ResCreateUserDTO.RoleUser(
+                2,
+                "USER"
+            );
+        }
+
+        resCreateUserDTO.setRole(roleUser);
+
+
         return resCreateUserDTO;
     }
 

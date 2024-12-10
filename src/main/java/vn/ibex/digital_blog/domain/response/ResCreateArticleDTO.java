@@ -19,3 +19,4 @@ public class ResCreateArticleDTO {
     private Instant createdAt;
     
 }
+

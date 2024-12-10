@@ -35,12 +35,13 @@ public class ArticleServiceImpl implements ArticleService {
         Article currentArticle = this.articleRepository.save(article);
 
         // convert response
-        ResCreateArticleDTO resCreateArticleDTO = new ResCreateArticleDTO();
-        resCreateArticleDTO.setId(currentArticle.getId());
-        resCreateArticleDTO.setTitle(currentArticle.getTitle());
-        resCreateArticleDTO.setContent(currentArticle.getContent());
-        resCreateArticleDTO.setCreatedBy(currentArticle.getCreatedBy());
-        resCreateArticleDTO.setCreatedAt(currentArticle.getCreatedAt());
+        ResCreateArticleDTO resCreateArticleDTO = new ResCreateArticleDTO(
+            currentArticle.getId(),
+            currentArticle.getTitle(),
+            currentArticle.getContent(),
+            currentArticle.getCreatedBy(),
+            currentArticle.getCreatedAt()
+        );
 
         return resCreateArticleDTO;
     }
@@ -63,11 +64,12 @@ public class ArticleServiceImpl implements ArticleService {
         Article currentArticle = this.articleRepository.save(articleInDB);
 
         // convert response
-        ResUpdateArticleDTO resUpdateArticleDTO = new ResUpdateArticleDTO();
-        resUpdateArticleDTO.setId(currentArticle.getId());
-        resUpdateArticleDTO.setTitle(currentArticle.getTitle());
-        resUpdateArticleDTO.setContent(currentArticle.getContent());
-        resUpdateArticleDTO.setUpdatedAt(currentArticle.getUpdatedAt());
+        ResUpdateArticleDTO resUpdateArticleDTO = new ResUpdateArticleDTO(
+            currentArticle.getId(),
+            currentArticle.getTitle(),
+            currentArticle.getContent(),
+            currentArticle.getUpdatedAt()
+        );
 
         return resUpdateArticleDTO;
     }
@@ -78,14 +80,15 @@ public class ArticleServiceImpl implements ArticleService {
 
     public ResultPaginationDTO fetchAllArticle(Pageable pageable){
         ResultPaginationDTO resultPaginationDTO = new ResultPaginationDTO();
-        ResultPaginationDTO.Meta meta= new ResultPaginationDTO.Meta();
 
         Page<Article> articlePage = this.articleRepository.findAll(pageable);
 
-        meta.setPage(pageable.getPageNumber()+1);
-        meta.setPageSize(pageable.getPageSize());
-        meta.setPages(articlePage.getTotalPages());
-        meta.setTotal(articlePage.getTotalElements());
+        ResultPaginationDTO.Meta meta= new ResultPaginationDTO.Meta(
+            pageable.getPageNumber()+1,
+            pageable.getPageSize(),
+            articlePage.getTotalPages(),
+            articlePage.getTotalElements()
+        );
 
         resultPaginationDTO.setMeta(meta);
         resultPaginationDTO.setResult(articlePage.getContent());

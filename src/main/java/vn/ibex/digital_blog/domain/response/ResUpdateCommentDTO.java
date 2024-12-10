@@ -36,4 +36,10 @@ public class ResUpdateCommentDTO {
         private long id;
         private String username;
     }
+
+    public ResUpdateCommentDTO(long id, String content, Instant updatedAt) {
+        this.id = id;
+        this.content = content;
+        this.updatedAt = updatedAt;
+    }
 }

@@ -51,18 +51,26 @@ public class CommentServiceImpl implements CommentService {
 
         comment = this.commentRepository.save(comment);
 
-        ResCreateCommentDTO resCreateCommentDTO = new ResCreateCommentDTO();
-        ResCreateCommentDTO.ArticleCMT articleCMT = new ResCreateCommentDTO.ArticleCMT();
-        ResCreateCommentDTO.UserCMT userCMT = new ResCreateCommentDTO.UserCMT();
-        resCreateCommentDTO.setId(comment.getId());
-        resCreateCommentDTO.setContent(comment.getContent());
-        resCreateCommentDTO.setCreatedAt(comment.getCreatedAt());
-
-        articleCMT.setId(article.getId());
-        articleCMT.setTitle(article.getTitle());
+        ResCreateCommentDTO resCreateCommentDTO = new ResCreateCommentDTO(
+                comment.getId(),
+                comment.getContent(),
+                comment.getCreatedAt()
+        );
+        ResCreateCommentDTO.ArticleCMT articleCMT = new ResCreateCommentDTO.ArticleCMT(
+            article.getId(),
+            article.getTitle()
+        );
+        ResCreateCommentDTO.UserCMT userCMT;
         if(user!=null){
-            userCMT.setId(user.getId());
-            userCMT.setUsername(user.getEmail());
+            userCMT= new ResCreateCommentDTO.UserCMT(
+                user.getId(),
+                user.getEmail()
+            );
+        }else{
+            userCMT= new ResCreateCommentDTO.UserCMT(
+                3,
+                "Anonymous"
+            );
         }
 
 
@@ -82,18 +90,21 @@ public class CommentServiceImpl implements CommentService {
             comment.setContent(content);
             this.commentRepository.save(comment);
 
-            ResUpdateCommentDTO resUpdateCommentDTO = new ResUpdateCommentDTO();
-            ResUpdateCommentDTO.ArticleCMT articleCMT = new ResUpdateCommentDTO.ArticleCMT();
-            ResUpdateCommentDTO.UserCMT userCMT = new ResUpdateCommentDTO.UserCMT();
-            resUpdateCommentDTO.setId(comment.getId());
-            resUpdateCommentDTO.setContent(comment.getContent());
-            resUpdateCommentDTO.setUpdatedAt(comment.getUpdatedAt());
+            ResUpdateCommentDTO resUpdateCommentDTO = new ResUpdateCommentDTO(
+                    comment.getId(),
+                    comment.getContent(),
+                    comment.getUpdatedAt()
+            );
+            ResUpdateCommentDTO.ArticleCMT articleCMT = new ResUpdateCommentDTO.ArticleCMT(
+                currentArticle.get().getId(),
+                currentArticle.get().getTitle()
+            );
+            ResUpdateCommentDTO.UserCMT userCMT = new ResUpdateCommentDTO.UserCMT(
+                currentUser.get().getId(),
+                currentUser.get().getEmail()
+            );
 
-            articleCMT.setId(currentArticle.get().getId());
-            articleCMT.setTitle(currentArticle.get().getTitle());
 
-            userCMT.setId(currentUser.get().getId());
-            userCMT.setUsername(currentUser.get().getEmail());
 
             resUpdateCommentDTO.setArticle(articleCMT);
             resUpdateCommentDTO.setUser(userCMT);

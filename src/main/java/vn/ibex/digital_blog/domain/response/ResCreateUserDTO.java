@@ -10,6 +10,8 @@ import vn.ibex.digital_blog.domain.Role;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ResCreateUserDTO {
     private long id;
     private String email;
@@ -19,6 +21,8 @@ public class ResCreateUserDTO {
     private Instant dob;
     private boolean active;
     private RoleUser role;
+
+
      @Getter
     @Setter
     @AllArgsConstructor
@@ -26,6 +30,16 @@ public class ResCreateUserDTO {
     public static class RoleUser {
         private long id;
         private String name;
+    }
+
+    public ResCreateUserDTO(long id, String email, String phone, String address, String fullname, Instant dob, boolean active) {
+        this.id = id;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.fullname = fullname;
+        this.dob = dob;
+        this.active = active;
     }
 
 }

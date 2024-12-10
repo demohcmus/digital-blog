@@ -37,4 +37,11 @@ public class ResCreateCommentDTO {
         private long id;
         private String username;
     }
+
+
+    public ResCreateCommentDTO(long id, String content, Instant createdAt) {
+        this.id = id;
+        this.content = content;
+        this.createdAt = createdAt;
+    }
 }
