@@ -14,12 +14,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.Setter;
+import vn.ibex.digital_blog.util.annotation.StrongPassword;
 
 @Table(name= "users")
 @Entity
@@ -31,9 +34,12 @@ public class User {
     private long id;
     
     @NotBlank(message = "Email is required")
+    @Email(message= "Email should be valid")
     private String email;
 
     @NotBlank(message = "Password is required")
+    @Size(min=6, message = "Password should be at least 6 characters")
+    //@StrongPassword
     private String password;
 
 

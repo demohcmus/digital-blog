@@ -29,42 +29,50 @@ public class PermissionInterceptor implements HandlerInterceptor {
             HttpServletResponse response, Object handler)
             throws Exception {
 
-        String path = (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
-        String requestURI = request.getRequestURI();
-        String httpMethod = request.getMethod();
-        System.out.println(">>> RUN preHandle");
-        System.out.println(">>> path= " + path);
-        System.out.println(">>> httpMethod= " + httpMethod);
-        System.out.println(">>> requestURI= " + requestURI);
+        try {
+            String path = (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
+            String requestURI = request.getRequestURI();
+            String httpMethod = request.getMethod();
+            System.out.println(">>> RUN preHandle");
+            System.out.println(">>> path= " + path);
+            System.out.println(">>> httpMethod= " + httpMethod);
+            System.out.println(">>> requestURI= " + requestURI);
 
-        // check permission
-        if (path.matches("/api/articles/\\d+/comments")) {
-            return true; // Cho phép truy cập mà không cần kiểm tra
-        }
+            // check permission
+            if (path.matches("/api/articles/\\d+/comments")) {
+                return true; // Allow access without checking
+            }
 
+            String email = SecurityUtil.getCurrentUserLogin().isPresent() == true
+                    ? SecurityUtil.getCurrentUserLogin().get()
+                    : "";
+            if (email != null && !email.isEmpty()) {
+                User user = this.userService.handleGetUserByUsername(email);
+                if (user != null) {
+                    Role role = user.getRole();
+                    if (role != null) {
+                        List<Permission> permissions = role.getPermissions();
+                        boolean isAllow = permissions.stream().anyMatch(item -> item.getApiPath().equals(path)
+                                && item.getMethod().equals(httpMethod));
 
-        
-        String email = SecurityUtil.getCurrentUserLogin().isPresent() == true
-                ? SecurityUtil.getCurrentUserLogin().get()
-                : "";
-        if (email != null && !email.isEmpty()) {
-            User user = this.userService.handleGetUserByUsername(email);
-            if (user != null) {
-                Role role = user.getRole();
-                if (role != null) {
-                    List<Permission> permissions = role.getPermissions();
-                    boolean isAllow = permissions.stream().anyMatch(item -> item.getApiPath().equals(path)
-                            && item.getMethod().equals(httpMethod));
-
-                    if (isAllow == false) {
+                        if (isAllow == false) {
+                            throw new IdInvalidException("You don't have permission to access this endpoint.");
+                        }
+                    } else {
                         throw new IdInvalidException("You don't have permission to access this endpoint.");
                     }
-                } else {
-                    throw new IdInvalidException("You don't have permission to access this endpoint.");
                 }
             }
-        }
 
-        return true;
+            return true;
+        } catch (IdInvalidException e) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write(e.getMessage());
+            return false;
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("An unexpected error occurred.");
+            return false;
+        }
     }
 }

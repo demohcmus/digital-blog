@@ -95,5 +95,15 @@ public class GlobalException {
         res.setMessage(ex.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
     }
+
+
+    @ExceptionHandler(IllegalArgumentException.class)
+public ResponseEntity<RestResponse<Object>> handleBadRequestException(IllegalArgumentException ex) {
+    RestResponse<Object> res = new RestResponse<Object>();
+    res.setStatusCode(HttpStatus.BAD_REQUEST.value());
+    res.setMessage(ex.getMessage());
+    res.setError("Bad Request");
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
+}
 }
 
